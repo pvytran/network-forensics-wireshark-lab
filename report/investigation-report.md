@@ -1,100 +1,76 @@
 # Network Forensics Investigation Report
 
-## 1. Executive Summary
+## Executive Summary
 
-This report documents a network forensics investigation performed using Wireshark against an authorized PCAP dataset.
+A controlled network-forensics investigation was performed using Wireshark against a simulated PCAP.
 
-The investigation focused on identifying communicating hosts, protocols, network conversations, suspicious activity, and potential indicators of compromise.
+The investigation identified suspicious HTTP activity originating from workstation `192.168.56.105`.
 
-## 2. Scope
+The workstation requested `/download/update.exe` from `192.168.56.200` and subsequently generated a simulated check-in request to the same server over TCP port `8080`.
 
-The investigation covered:
+## Affected Host
 
-* Network hosts
-* Network protocols
-* TCP/UDP conversations
-* DNS activity
-* HTTP activity
-* TLS/HTTPS metadata
-* Suspicious network connections
-* Potential indicators of compromise
+- Victim IP: `192.168.56.105`
 
-## 3. Tools
+## Investigated Server
 
-* Wireshark
-* TShark
-* Windows 10
+- Server IP: `192.168.56.200`
+- Hostname: `update-server.local`
 
-## 4. Host Analysis
+## Findings
 
-### Key Hosts
+### Finding 1 — Suspicious File Download
 
-> Add confirmed hosts and their roles here.
+The workstation issued:
 
-### Observations
+`GET /download/update.exe`
 
-> Document important host-to-host communication.
+over HTTP to `192.168.56.200`.
 
-## 5. Protocol Analysis
+### Finding 2 — Successful Server Response
 
-### Protocols Observed
+The server returned:
 
-> Add the protocols identified from Wireshark's Protocol Hierarchy.
+`HTTP/1.1 200 OK`
 
-### Observations
+with:
 
-> Describe any unusual or noteworthy protocol activity.
+`Content-Type: application/octet-stream`
 
-## 6. Conversation Analysis
+### Finding 3 — Simulated C2 Check-In
 
-> Document important conversations discovered through Wireshark's Conversations feature.
+The workstation subsequently communicated with the server over TCP port `8080` using:
 
-Include:
+`POST /api/checkin`
 
-* Source IP
-* Destination IP
-* Source port
-* Destination port
-* Protocol
-* Packet/byte counts
-* Duration
+The request contained simulated workstation status information.
 
-## 7. Suspicious Activity
+## Timeline
 
-> Describe any traffic determined to be suspicious and explain the evidence supporting that conclusion.
+1. Workstation performed DNS activity.
+2. Workstation established normal HTTP communication.
+3. Workstation requested `/download/update.exe`.
+4. Server returned HTTP `200 OK`.
+5. Workstation connected to TCP port `8080`.
+6. Workstation sent `/api/checkin`.
 
-## 8. Indicators of Compromise
+## Analyst Assessment
 
-Document confirmed indicators such as:
+The traffic demonstrates characteristics that a SOC analyst should investigate further, including a suspicious executable download followed by application-level check-in traffic.
 
-* IP addresses
-* Domains
-* URLs
-* Ports
-* Hostnames
-* File hashes
-* User-Agent strings
+Because this is a controlled simulation, the activity should not be interpreted as evidence of a real-world compromise.
 
-## 9. Evidence
+## Tools
 
-Screenshots supporting the investigation will be stored in:
+- Wireshark
+- tcpdump
+- Scapy
+- Kali Linux
 
-```text
-screenshots/
-```
+## Evidence
 
-## 10. Conclusion
+Wireshark screenshots documenting the investigation are stored in the `screenshots` directory.
 
-> Provide the final assessment of the network activity after completing the investigation.
+## Disclaimer
 
-## 11. Recommendations
-
-> Add recommended defensive actions based on the investigation findings.
-
-Examples may include:
-
-* Blocking confirmed malicious IP addresses/domains
-* Investigating affected endpoints
-* Reviewing related authentication logs
-* Monitoring for repeated network connections
-* Performing additional endpoint investigation
+This investigation was performed in a controlled laboratory environment using simulated network traffic for cybersecurity education and portfolio development.
