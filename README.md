@@ -167,3 +167,48 @@ The final report will summarize:
 ## Disclaimer
 
 This project is intended for educational and cybersecurity portfolio purposes. Analysis is performed on authorized laboratory PCAP data.
+
+
+## Skills Demonstrated
+
+This project demonstrates practical experience with:
+
+* Network traffic analysis
+* Wireshark packet analysis
+* PCAP/PCAPNG investigation
+* Host and endpoint identification
+* Protocol analysis
+* TCP/UDP conversation analysis
+* HTTP traffic investigation
+* TCP stream reconstruction
+* Suspicious file-download investigation
+* Indicator of Compromise (IOC) identification
+* Evidence collection and documentation
+* Basic network forensic reporting
+
+## Lessons Learned
+
+This investigation provided hands-on experience with the process of analyzing network traffic from a packet capture.
+
+Key lessons include:
+
+1. Network traffic should be investigated systematically rather than relying on a single suspicious packet.
+2. Wireshark display filters can significantly reduce the amount of traffic requiring manual review.
+3. Host and conversation analysis helps establish relationships between systems.
+4. Following network streams can provide additional context that individual packets may not reveal.
+5. Screenshots and documented evidence help support forensic conclusions.
+6. Indicators should be confirmed against the underlying evidence before being classified as malicious.
+
+## Future Improvements
+
+Future versions of this project may include:
+
+* TShark command-line analysis
+* Additional PCAP investigations
+* DNS-focused analysis
+* Malware traffic analysis
+* IOC enrichment
+* Detection-rule development
+* Integration with SIEM tools
+* Automated PCAP analysis
+
