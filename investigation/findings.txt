@@ -1,0 +1,46 @@
+NETWORK FORENSICS INVESTIGATION
+
+Victim IP:
+192.168.56.105
+
+Simulated Server:
+192.168.56.200
+
+Normal HTTP:
+GET /index.html
+
+Suspicious HTTP:
+GET /download/update.exe
+
+Suspicious Host:
+update-server.local
+
+Suspicious Port:
+8080
+
+Simulated C2 Request:
+POST /api/checkin
+
+DNS Query:
+example.com
+
+
+SUSPICIOUS ACTIVITY #1 — SERVER RESPONSE
+
+Source IP: 192.168.56.200
+Destination IP: 192.168.56.105
+Protocol: HTTP
+Status: 200 OK
+Content-Type: application/octet-stream
+
+
+SUSPICIOUS ACTIVITY #2 — SIMULATED C2 CHECK-IN
+
+Source IP: 192.168.56.105
+Destination IP: 192.168.56.200
+Destination Port: 8080
+Protocol: HTTP
+Method: POST
+URI: /api/checkin
+Host: update-server.local
+Request Data: host=192.168.56.105, status=active
