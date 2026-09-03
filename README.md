@@ -1,214 +1,119 @@
-# Network Forensics — Wireshark PCAP Investigation
+# Network Forensics Investigation — Wireshark
 
 ## Overview
 
-This project documents a network forensics investigation using **Wireshark** to analyze packet capture (PCAP) data.
+This project demonstrates a controlled network-forensics investigation using Wireshark, tcpdump, and Scapy.
 
-The goal of the investigation is to identify hosts, protocols, network conversations, suspicious traffic, and indicators of compromise (IOCs).
-
-## Investigation Workflow
-
-```text
-PCAP
- ↓
-Identify Hosts
- ↓
-Identify Protocols
- ↓
-Analyze Conversations
- ↓
-Investigate Suspicious Traffic
- ↓
-Extract Indicators
- ↓
-Document Findings
-```
-
-## Tools Used
-
-* Wireshark
-* TShark
-* Windows 10
-* PCAP/PCAPNG files
+The investigation analyzes simulated network traffic to identify suspicious HTTP activity, reconstruct network communications, extract indicators of compromise (IOCs), and document an incident timeline.
 
 ## Objectives
 
-The investigation focuses on:
+- Analyze PCAP network traffic
+- Identify communicating hosts
+- Investigate DNS activity
+- Analyze HTTP requests and responses
+- Identify suspicious file-download activity
+- Investigate TCP communications
+- Extract network indicators of compromise
+- Build an incident timeline
+- Produce a SOC-style investigation report
 
-* Identifying communicating hosts
-* Identifying commonly used network protocols
-* Examining TCP and UDP conversations
-* Following suspicious network streams
-* Investigating DNS, HTTP, TLS, and other relevant traffic
-* Identifying potentially malicious activity
-* Extracting IP addresses, domains, URLs, and other indicators
-* Documenting the investigation and findings
+## Lab Environment
 
-## Environment
+**Operating System:** Kali Linux
 
-| Component        | Details           |
-| ---------------- | ----------------- |
-| Operating System | Windows 10        |
-| Primary Tool     | Wireshark         |
-| Additional Tool  | TShark            |
-| Evidence         | PCAP/PCAPNG       |
-| Analysis Type    | Network Forensics |
+**Tools:**
 
-## Investigation
+- Wireshark
+- tcpdump
+- Scapy
 
-### 1. Host Identification
+## Network Hosts
 
-The first stage of the investigation identifies the hosts communicating within the captured traffic.
+| Role | IP Address |
+|---|---|
+| Victim Workstation | `192.168.56.105` |
+| Simulated Server | `192.168.56.200` |
+| DNS Server | `192.168.56.1` |
 
-Evidence and screenshots will be documented in:
+## Investigation Findings
 
-`investigation/hosts.md`
+### Finding 1 — Suspicious File Download
 
-### 2. Protocol Analysis
-
-Network protocols observed in the capture will be reviewed to determine normal and potentially suspicious communications.
-
-Examples include:
-
-* DNS
-* HTTP
-* HTTPS/TLS
-* TCP
-* UDP
-* ICMP
-
-Evidence will be documented in:
-
-`investigation/protocols.md`
-
-### 3. Conversation Analysis
-
-Network conversations will be examined to identify:
-
-* Source and destination IP addresses
-* Ports
-* Connection frequency
-* Data transfers
-* Unusual communication patterns
-
-Evidence will be documented in:
-
-`investigation/conversations.md`
-
-### 4. Suspicious Traffic
-
-Potentially suspicious traffic will be investigated using Wireshark filters, stream reconstruction, packet inspection, and other forensic techniques.
-
-Examples of areas investigated:
-
-* Unusual DNS requests
-* Suspicious HTTP requests
-* Unexpected external connections
-* Repeated connections to the same host
-* Possible command-and-control traffic
-* Possible data transfer or exfiltration
-
-### 5. Indicators of Compromise
-
-Relevant indicators identified during the investigation will be documented, including:
-
-* IP addresses
-* Domains
-* URLs
-* Ports
-* Protocols
-* File hashes, when available
-* Other relevant network artifacts
-
-Indicators will be documented in:
-
-`investigation/indicators.md`
-
-## Findings
-
-> Findings will be added as the PCAP investigation is completed.
-
-## Screenshots
-
-Screenshots demonstrating the investigation process will be stored in:
+The workstation `192.168.56.105` requested:
 
 ```text
-screenshots/
-```
+GET /download/update.exe
 
-Examples include:
+from 
+192.168.56.200
 
-* Wireshark packet overview
-* Protocol hierarchy
-* Conversations
-* Endpoints
-* Follow TCP Stream
-* DNS investigation
-* HTTP investigation
-* Suspicious traffic
+over HTTP port 80.
 
-## Final Report
+Finding 2 — Server Response
 
-A complete investigation report will be maintained in:
+The server returned:
 
-`report/investigation-report.md`
+HTTP/1.1 200 OK
 
-The final report will summarize:
+with:
 
-1. Investigation scope
-2. Evidence examined
-3. Hosts identified
-4. Protocols identified
-5. Suspicious activity
-6. Indicators of compromise
-7. Findings
-8. Analyst conclusion
+Content-Type: application/octet-stream
 
-## Disclaimer
+indicating that binary/file data was returned.
 
-This project is intended for educational and cybersecurity portfolio purposes. Analysis is performed on authorized laboratory PCAP data.
+Finding 3 — Simulated C2 Check-In
+
+The workstation communicated with the simulated server over TCP port 8080.
+
+The HTTP request contained:
+
+POST /api/checkin
+
+with simulated workstation status information.
+
+Indicators of Compromise
+Type	Indicator
+IP Address	192.168.56.200
+Host	update-server.local
+URI	/download/update.exe
+URI	/api/checkin
+Port	80
+Port	8080
+
+Investigation Methodology
+
+PCAP
+  ↓
+Traffic Filtering
+  ↓
+Host Identification
+  ↓
+DNS Analysis
+  ↓
+HTTP Analysis
+  ↓
+TCP Analysis
+  ↓
+IOC Extraction
+  ↓
+Timeline Reconstruction
+  ↓
+SOC Investigation Report
 
 
-## Skills Demonstrated
+Skills Demonstrated
+Network Forensics
+Wireshark
+PCAP Analysis
+TCP/IP Analysis
+DNS Analysis
+HTTP Analysis
+tcpdump
+Scapy
+IOC Identification
+Incident Investigation
+SOC Documentation
+Disclaimer
 
-This project demonstrates practical experience with:
-
-* Network traffic analysis
-* Wireshark packet analysis
-* PCAP/PCAPNG investigation
-* Host and endpoint identification
-* Protocol analysis
-* TCP/UDP conversation analysis
-* HTTP traffic investigation
-* TCP stream reconstruction
-* Suspicious file-download investigation
-* Indicator of Compromise (IOC) identification
-* Evidence collection and documentation
-* Basic network forensic reporting
-
-## Lessons Learned
-
-This investigation provided hands-on experience with the process of analyzing network traffic from a packet capture.
-
-Key lessons include:
-
-1. Network traffic should be investigated systematically rather than relying on a single suspicious packet.
-2. Wireshark display filters can significantly reduce the amount of traffic requiring manual review.
-3. Host and conversation analysis helps establish relationships between systems.
-4. Following network streams can provide additional context that individual packets may not reveal.
-5. Screenshots and documented evidence help support forensic conclusions.
-6. Indicators should be confirmed against the underlying evidence before being classified as malicious.
-
-## Future Improvements
-
-Future versions of this project may include:
-
-* TShark command-line analysis
-* Additional PCAP investigations
-* DNS-focused analysis
-* Malware traffic analysis
-* IOC enrichment
-* Detection-rule development
-* Integration with SIEM tools
-* Automated PCAP analysis
-
+This project uses simulated network traffic in a controlled laboratory environment for educational and portfolio purposes. No real malware or unauthorized systems were used.
